@@ -34,3 +34,4 @@ g = {
 src = 0
 result = BellmanFord(g, src)
 print(result)
+

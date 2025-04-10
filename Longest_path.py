@@ -38,3 +38,4 @@ graph = {
 
 result = longest_path_in_dag(graph, 0)
 print(result)
+

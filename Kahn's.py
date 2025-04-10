@@ -1,7 +1,7 @@
 from collections import deque, defaultdict
 
 def kahn_topological_sort(graph):
-    in_degree = {node: 0 for node in graph}  
+    in_degree = {node: 0 for node in graph}
     for neighbors in graph.values():
         for neighbor in neighbors:
             in_degree[neighbor] += 1
@@ -35,3 +35,4 @@ graph = {
 
 result = kahn_topological_sort(graph)
 print(result)
+

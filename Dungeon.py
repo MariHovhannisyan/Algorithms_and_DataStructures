@@ -40,3 +40,4 @@ labyrinth = [
 
 result = minimal_steps(labyrinth)
 print("Քայլերի նվազագույն քանակը՝", result)
+

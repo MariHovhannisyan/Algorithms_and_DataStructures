@@ -38,3 +38,4 @@ finish = int(input("enter the last node: "))
 
 dist = lazy_dijkstra(g, start, finish)
 print(dist)
+

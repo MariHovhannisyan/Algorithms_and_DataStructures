@@ -27,3 +27,4 @@ adj_matrix = [
 
 print("DFS starting from node 0:")
 depth_first_search(adj_matrix, 0)
+
