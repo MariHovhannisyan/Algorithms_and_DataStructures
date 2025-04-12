@@ -1,23 +1,23 @@
-def topsort(graph):
-    visited = set()
-    result = []
+def topological_sort(graph):
+    visited_nodes = set()
+    top_order = []
 
-    def dfs(node):
-        if node in visited:
+    def explore(node):
+        if node in visited_nodes:
             return
-        visited.add(node)
+        visited_nodes.add(node)
         for neighbor in graph[node]:
-            dfs(neighbor)
-        result.append(node)
+            explore(neighbor)
+        top_order.append(node)
 
-    for node in graph:
-        if node not in visited:
-            dfs(node)
+    for vertex in graph:
+        if vertex not in visited_nodes:
+            explore(vertex)
 
-    return result[::-1]
+    return top_order[::-1]
 
 
-graph = {
+dag = {
     'A': ['B', 'C', 'D'],
     'B': ['J'],
     'C': ['F', 'I'],
@@ -31,5 +31,5 @@ graph = {
     'K': []
 }
 
-order = topsort(graph)
-print(order)
+sorted_nodes = topological_sort(dag)
+print("Topological Sort Order:", sorted_nodes)
