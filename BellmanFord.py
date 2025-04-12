@@ -1,24 +1,26 @@
-def BellmanFord(graph, source):
-    v = len(graph)
-    edges = [(at, to, weight) for at in graph for to, weight in graph[at]]
+def bellman_ford(graph, start_node):
+    num_vertices = len(graph)
+    all_edges = [(u, v, w) for u in graph for v, w in graph[u]]
 
-    distance = [float('inf')] * v
-    distance[source] = 0
+    distances = [float('inf')] * num_vertices
+    distances[start_node] = 0
 
-    for _ in range(v - 1):
-        for at, to, weight in edges:
-            if distance[at] != float('inf') and distance[at] + weight < distance[to]:
-                distance[to] = distance[at] + weight
+    for _ in range(num_vertices - 1):
+        for u, v, w in all_edges:
+            if distances[u] != float('inf') and distances[u] + w < distances[v]:
+                distances[v] = distances[u] + w
 
-    #Detect negative cycle
-    for at, to, weight in edges:
-        if distance[at] != float('inf') and distance[at] + weight < distance[to]:
-            distance[to] = float('-inf')  # Mark as part of a negative cycle
+    #negative weight cycles
+    for u, v, w in all_edges:
+        if distances[u] != float('inf') and distances[u] + w < distances[v]:
+            distances[v] = float('-inf')  # Mark involvement in negative cycle
 
-    return "Graph contains a negative cycle", distance if float('-inf') in distance else distance
+    if float('-inf') in distances:
+        return "Graph contains a negative cycle", distances
+    return "No negative cycle detected", distances
 
 
-g = {
+graph_data = {
     0: [(1, 5)],
     1: [(6, 60), (5, 30), (2, 20)],
     2: [(3, 10), (4, 75)],
@@ -31,7 +33,8 @@ g = {
     9: []
 }
 
-src = 0
-result = BellmanFord(g, src)
-print(result)
+start = 0
+status, shortest_distances = bellman_ford(graph_data, start)
 
+print(status)
+print("Shortest distances from node", start, ":", shortest_distances)
