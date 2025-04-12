@@ -1,34 +1,48 @@
 def topological_sort(graph):
-    visited = set()
-    order = []
+    visited_nodes = set()
+    topo_order = []
 
-    def dfs(node):
-        if node not in visited:
-            visited.add(node)
+    def depth_first(node):
+        if node not in visited_nodes:
+            visited_nodes.add(node)
             for neighbor, _ in graph[node]:
-                dfs(neighbor)
-            order.append(node)
+                depth_first(neighbor)
+            topo_order.append(node)
 
-    for node in graph:
-        if node not in visited:
-            dfs(node)
+    for current_node in graph:
+        if current_node not in visited_nodes:
+            depth_first(current_node)
 
-    return order[::-1]
+    return topo_order[::-1]
 
-def longest_path_in_dag(graph, start):
-    neg_graph = {u: [(v, -w) for v, w in edges] for u, edges in graph.items()}
-    top_order = topological_sort(neg_graph)
-    dist = {node: float('-inf') for node in neg_graph}
-    dist[start] = 0
 
-    for u in top_order:
-        if dist[u] != float('-inf'):
-            for v, neg_weight in neg_graph[u]:
-                dist[v] = max(dist[v], dist[u] - neg_weight)
+def find_longest_path(dag, start_node):
+    #weights to negative
+    neg_weight_graph = {
+        node: [(neighbor, -weight) for neighbor, weight in edges]
+        for node, edges in dag.items()
+    }
 
-    return {node: -d if d != float('-inf') else float('-inf') for node, d in dist.items()}
+    sorted_nodes = topological_sort(neg_weight_graph)
 
-graph = {
+    max_distances = {node: float('-inf') for node in dag}
+    max_distances[start_node] = 0
+
+    for node in sorted_nodes:
+        if max_distances[node] != float('-inf'):
+            for neighbor, neg_weight in neg_weight_graph[node]:
+                max_distances[neighbor] = max(max_distances[neighbor], max_distances[node] - neg_weight)
+
+    #distances back to positive
+    final_distances = {
+        node: -dist if dist != float('-inf') else float('-inf')
+        for node, dist in max_distances.items()
+    }
+
+    return final_distances
+
+
+dag_graph = {
     0: [(1, 4), (2, 1)],
     1: [(3, 1)],
     2: [(1, 2), (3, 5)],
@@ -36,6 +50,6 @@ graph = {
     4: []
 }
 
-result = longest_path_in_dag(graph, 0)
-print(result)
-
+start = 0
+longest_paths = find_longest_path(dag_graph, start)
+print("Longest paths from node", start, ":", longest_paths)
