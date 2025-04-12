@@ -1,31 +1,31 @@
-def lazy_dijkstra(graph, first_node, last_node):
-    distance = [float('inf') for _ in graph]
-    distance[first_node] = 0
-    priority_queue = [(first_node, 0)]
-    while priority_queue:
-        #node with smallest distance in priority queue
-        index = 0
-        for i in range(1, len(priority_queue)):
-            if priority_queue[i][1] < priority_queue[index][1]:
-                index = i
+def lazy_dijkstra(graph, source, target):
+    num_nodes = len(graph)
+    min_distance = [float('inf')] * num_nodes
+    min_distance[source] = 0
 
-        current_dist, current_node = priority_queue.pop(index)
+    queue = [(source, 0)]
 
-        if current_node == last_node:
-            return current_dist
+    while queue:
+        #node in the queue with the smallest distance
+        smallest_index = min(range(len(queue)), key=lambda i: queue[i][1])
+        current_node, current_cost = queue.pop(smallest_index)
 
-        if current_dist > distance[current_node]:
+        if current_node == target:
+            return current_cost
+
+        if current_cost > min_distance[current_node]:
             continue
 
-        for neighbour, weight in graph[current_node]:
-            dist = current_dist + weight
+        for neighbor, weight in graph[current_node]:
+            total_cost = current_cost + weight
+            if total_cost < min_distance[neighbor]:
+                min_distance[neighbor] = total_cost
+                queue.append((neighbor, total_cost))
 
-            if dist < distance[neighbour]:
-                distance[neighbour] = dist
-                priority_queue.append((dist, neighbour))
+    return float('inf')  #if target is unreachable
 
 
-g = {
+graph_data = {
     0: [(1, 4), (2, 1)],
     1: [(3, 1)],
     2: [(1, 2), (3, 5)],
@@ -33,9 +33,12 @@ g = {
     4: []
 }
 
-start = int(input("enter the first node: "))
-finish = int(input("enter the last node: "))
+try:
+    start_node = int(input("Enter the starting node: "))
+    end_node = int(input("Enter the target node: "))
 
-dist = lazy_dijkstra(g, start, finish)
-print(dist)
+    shortest_path_cost = lazy_dijkstra(graph_data, start_node, end_node)
 
+    print(f"Shortest path cost from node {start_node} to node {end_node}: {shortest_path_cost}")
+except ValueError:
+    print("Enter valid integer node values.")
