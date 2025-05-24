@@ -11,7 +11,7 @@ def magic_cows(C, N, M, initial_cows, queries):
                 continue  #no farms of this size
             if i * 2 <= C:  #doubling will not exceed the limit
                 dp[day + 1][i * 2] += dp[day][i]
-            else:   #doubling exceeds limit:
+            else:   #doubling exceeds limit
                 dp[day + 1][i] += 2 * dp[day][i]
 
     results = []
